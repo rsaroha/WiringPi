@@ -259,14 +259,14 @@ int scrollPhatPutchar (int c)
   else
     c -= 32 ;
 
-  fontPtr = scrollPhatFont + c * fontHeight ;
+  fontPtr = scrollPhatFont + c * scroll_fontHeight ;
 
 // Work out width of this character
 //	There probably is a more efficient way to do this, but...
 
   p2    = fontPtr ;
   width = 0 ;
-  for (y = 0 ; y < fontHeight ; ++y)
+  for (y = 0 ; y < scroll_fontHeight ; ++y)
   {
     mask = 0x80 ;
     for (lineWidth = 8 ; lineWidth > 0 ; --lineWidth)
@@ -284,7 +284,7 @@ int scrollPhatPutchar (int c)
   if (width == 0)	// Likely to be a blank or space character
     width = 3 ;
 
-  for (y = fontHeight - 1 ; y >= 0 ; --y)
+  for (y = scroll_fontHeight - 1 ; y >= 0 ; --y)
   {
     x    = 0 ;
     line = *fontPtr++ ;
@@ -297,7 +297,7 @@ int scrollPhatPutchar (int c)
 
 // make a line of space
 
-  for (y = fontHeight - 1 ; y >= 0 ; --y)
+  for (y = scroll_fontHeight - 1 ; y >= 0 ; --y)
     scrollPhatPoint (putcharX + width, y, 0) ;
 
   putcharX = putcharX + width + 1 ;

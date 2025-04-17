@@ -184,6 +184,17 @@ int wiringPiSPIxSetupMode(const int number, const int channel, const int speed, 
 }
 
 
+/*
+ * wiringPiSPIxSetup:
+ *	Open the SPI device, and set it up in the default MODE 0
+ *********************************************************************************
+ */
+int wiringPiSPIxSetup(const int number, const int channel, const int speed)
+{
+   return wiringPiSPIxSetupMode (number, channel, speed, 0);
+}
+
+
 int wiringPiSPISetupMode (int channel, int speed, int mode) {
  return wiringPiSPIxSetupMode (0, channel, speed, mode);
 }

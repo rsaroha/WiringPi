@@ -25,7 +25,7 @@
  ***********************************************************************
  */
 
-static const int fontHeight = 5 ;
+static const int scroll_fontHeight = 5 ;
 
 static unsigned char scrollPhatFont [] =
 {

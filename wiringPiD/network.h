@@ -22,7 +22,6 @@
  */
 
 extern char *getClientIP   (void) ;
-extern int   getResponce   (int clientFd) ;
 extern int   setupServer   (int serverPort) ;
 extern int   sendGreeting  (int clientFd) ;
 extern int   sendChallenge (int clientFd) ;
