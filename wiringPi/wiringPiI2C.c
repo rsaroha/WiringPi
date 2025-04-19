@@ -304,7 +304,7 @@ int wiringPiI2CSetup (const int devId)
   if(wiringPiI2CDetectDevice(fd, devId) == 0)
   {
      close(fd);
-     return 0;
+     return -1;
   }
   else
      return fd;
