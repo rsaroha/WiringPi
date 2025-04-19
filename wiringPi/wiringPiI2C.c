@@ -111,6 +111,22 @@ static inline int i2c_smbus_access (int fd, char rw, uint8_t command, int size, 
 }
 
 
+static inline int i2c_smbus_write_quick(int fd, uint8_t command)
+{
+	return i2c_smbus_access(fd, command, 0, I2C_SMBUS_QUICK, NULL);
+}
+
+static inline int i2c_smbus_read_byte(int file)
+{
+	union i2c_smbus_data data;
+	int err;
+
+	if(i2c_smbus_access(file, I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &data))
+	   return -1;
+    else
+       return 0x0FF & data.byte;
+}
+
 /*
  * wiringPiI2CRead:
  *	Simple device read
@@ -119,12 +135,7 @@ static inline int i2c_smbus_access (int fd, char rw, uint8_t command, int size, 
 
 int wiringPiI2CRead (int fd)
 {
-  union i2c_smbus_data data ;
-
-  if (i2c_smbus_access (fd, I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &data))
-    return -1 ;
-  else
-    return data.byte & 0xFF ;
+   return i2c_smbus_read_byte(fd);
 }
 
 
@@ -226,6 +237,28 @@ int wiringPiI2CRawWrite (int fd, const uint8_t *values, uint8_t size)
   return(write(fd, values, size));
 }
 
+
+static int wiringPiI2CDetectDevice(int fd, const int devId)
+{
+   int res;
+
+   if( (devId >= 0x30 && devId <= 0x37) ||
+       (devId >= 0x50 && devId <= 0x5F)
+     )
+   {
+      res = i2c_smbus_read_byte(fd);
+   }
+   else
+   {
+      res = i2c_smbus_write_quick( fd, I2C_SMBUS_WRITE);
+   }
+
+   if(res < 0)
+      return 0;
+   else
+      return 1;
+}
+
 /*
  * wiringPiI2CSetupInterface:
  *	Undocumented access to set the interface explicitly - might be used
@@ -268,5 +301,12 @@ int wiringPiI2CSetup (const int devId)
 
   fd = wiringPiI2CSetupInterface (device, devId) ;
 
-  return fd;
+  /* Check that the device is indeed detected */
+  if(wiringPiI2CDetectDevice(fd, devId) == 0)
+  {
+     close(fp);
+     return 0;
+  }
+  else
+     return fd;
 }
