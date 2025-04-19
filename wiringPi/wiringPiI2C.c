@@ -119,7 +119,6 @@ static inline int i2c_smbus_write_quick(int fd, uint8_t command)
 static inline int i2c_smbus_read_byte(int file)
 {
 	union i2c_smbus_data data;
-	int err;
 
 	if(i2c_smbus_access(file, I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &data))
 	   return -1;
@@ -304,7 +303,7 @@ int wiringPiI2CSetup (const int devId)
   /* Check that the device is indeed detected */
   if(wiringPiI2CDetectDevice(fd, devId) == 0)
   {
-     close(fp);
+     close(fd);
      return 0;
   }
   else
